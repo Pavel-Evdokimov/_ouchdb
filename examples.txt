@@ -1,0 +1,10 @@
+Примеры запросов:
+Постоянно получать изменения с фильтром на сервере 
+http://z14-0774-opndfb.vesta.ru:5984/couch/_changes?filter=country/level&level=Elementary&feed=continuous
+http://z14-0774-opndfb.vesta.ru:5984/couch/_changes?filter=country/level&level=Beginner&limit=10&feed=continuous
+
+http://z14-0774-opndfb.vesta.ru:5984/couch/_changes?filter=country/level&level=Elementary&feed=eventsource
+http://z14-0774-opndfb.vesta.ru:5984/couch/_changes?filter=country/level&level=Elementary&feed=eventsource&since=now
+
+Создание строчной функции в javascript
+https://www.freeformatter.com/javascript-escape.html#ad-output

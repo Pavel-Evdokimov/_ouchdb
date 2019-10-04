@@ -1,0 +1,1 @@
+module.exports = 'https://2886795318-5984-elsy02.environments.katacoda.com';
