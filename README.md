@@ -40,3 +40,6 @@ app.listen(3001);
 
 ### Подключаем PouchDB
 https://pouchdb.com. Большая зеленая кнопка Download и ставим это в папку **public/src/**
+
+Дальше нужно показать работу с offline first approach https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers.
+Интересный пример есть у IBM https://github.com/ibm-watson-data-lab/shopping-list-vanillajs-pouchdb/tree/master/tutorial
