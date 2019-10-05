@@ -43,3 +43,12 @@ https://pouchdb.com. Большая зеленая кнопка Download и ст
 
 Дальше нужно показать работу с offline first approach https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers.
 Интересный пример есть у IBM https://github.com/ibm-watson-data-lab/shopping-list-vanillajs-pouchdb/tree/master/tutorial
+
+### HTTPS
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout privatekey.key -out certificate.crt
+
+Обмануть Chrome для локальной отладки можно так:
+
+`
+C:\Program Files (x86)\Google\Chrome\Application\chrome.exe --user-data-dir=/tmp/foo --ignore-certificate-errors --unsafely-treat-insecure-origin-as-secure=https://localhost`/
+
