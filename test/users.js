@@ -2,11 +2,14 @@ const assert = require("assert");
 const got = require("got");
 const {
   parseGotResponseFromCouchDB,
-  parseGotPutResponseFromCouchDB
-} = require("../lib");
-const url = "http://admin:admin@localhost:5984/_users/org.couchdb.user";
+  parseGotPutResponseFromCouchDB,
+  parseGotPostSessionFromCouchDB
+} = require("../lib/helpers");
+const couchUrl = "http://admin:admin@localhost:5984";
+const usersUrl = `${couchUrl}/_users/org.couchdb.user`;
+const sessionUrl = `${couchUrl}/_session`;
 const user = { name: "test", password: "123456", roles: [], type: "user" };
-const userUrl = () => `${url}:${user.name}`;
+const testUserUrl = `${usersUrl}:${user.name}`;
 
 /**
  * Берем весь трафик в Fiddler.
@@ -24,7 +27,7 @@ describe("users", function() {
   it("create new user", async function() {
     let putResponse, parsedPutResponse;
     try {
-      putResponse = await got.put(userUrl(), {
+      putResponse = await got.put(testUserUrl, {
         json: true,
         body: user
       });
@@ -35,17 +38,35 @@ describe("users", function() {
     assert.ok(parsedPutResponse.ok);
   });
 
+  it("authenticate user test", async function() {
+    let postResponse, parsedPostResponse;
+    try {
+      postResponse = await got.post(sessionUrl, {
+        json: true,
+        body: {
+          name: user.name,
+          password: user.password
+        }
+      });
+      parsedPostResponse = parseGotPostSessionFromCouchDB(postResponse);
+    } catch (error) {
+      assert.fail(error);
+    }
+    assert.ok(parsedPostResponse.ok);
+  });
+
   it("delete test user", async function() {
     let headResponse, parsedHeadResponse;
+    JSON.stringify;
     try {
-      headResponse = await got.head(userUrl());
+      headResponse = await got.head(testUserUrl);
       parsedHeadResponse = parseGotResponseFromCouchDB(headResponse);
     } catch (error) {
       assert.fail(error);
     }
     let deleteResponse, parsedDeleteResponse;
     try {
-      deleteResponse = await got.delete(userUrl(), {
+      deleteResponse = await got.delete(testUserUrl, {
         headers: { "If-Match": parsedHeadResponse.etag }
       });
       parsedDeleteResponse = parseGotResponseFromCouchDB(deleteResponse);
