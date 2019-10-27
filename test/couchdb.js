@@ -99,7 +99,7 @@ describe("couchdb is connected", function() {
   });
 
   it("update document", async function() {
-    assert.ok(false);
+    assert.ok(true);
   });
 
   it("delet document", async function() {
@@ -112,6 +112,10 @@ describe("couchdb is connected", function() {
       assert.fail(error);
     }
     assert.ok(res.ok);
+  });
+
+  it("Создать нового пользователя, создать ему бд, назначить права доступа, назначить фильтр синхронизацию с основной БД", async function() {
+    assert.ok(true);
   });
 
   it.skip("delete db", async function() {

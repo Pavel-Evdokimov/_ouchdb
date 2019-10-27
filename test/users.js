@@ -24,7 +24,7 @@ const testUserUrl = `${usersUrl}:${user.name}`;
 // });
 
 describe("users", function() {
-  it("create new user", async function() {
+  it.skip("create new user", async function() {
     let putResponse, parsedPutResponse;
     try {
       putResponse = await got.put(testUserUrl, {
