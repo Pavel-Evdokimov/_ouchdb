@@ -10,7 +10,7 @@ const testDB = new PouchDB("http://admin:admin@localhost:5984/test");
 describe("couchdb is connected", function() {
   it("couchdb info", async function() {
     const result = await got.get("http://localhost:5984");
-    assert.ok(result.ok);
+    assert.ok(result.statusMessage === "OK");
   });
 
   it("create test db", async function() {
