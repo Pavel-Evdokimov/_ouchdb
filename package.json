@@ -4,7 +4,7 @@
   "description": "Установка проста. Для наших целей воспользуемся сервисом [katacoda](https://www.katacoda.com/courses/docker/playground).",
   "main": "EventSource.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,15 @@
   },
   "homepage": "https://github.com/Pavel-Evdokimov/_ouchdb#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "got": "^9.6.0",
+    "pouchdb-adapter-http": "^7.1.1",
+    "pouchdb-core": "^7.1.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "dotenv": "^8.2.0",
+    "mocha": "^6.2.2",
+    "tunnel": "0.0.6"
   }
 }

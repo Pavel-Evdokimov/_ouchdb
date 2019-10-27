@@ -47,8 +47,7 @@ https://pouchdb.com. Большая зеленая кнопка Download и ст
 ### HTTPS
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout privatekey.key -out certificate.crt
 
-Обмануть Chrome для локальной отладки можно так:
+Для разработки на localhost сертификат не нужен, но если хотим публиковать, то нужен. Для примера, можно воспользоваться github pages. 
 
-`
-C:\Program Files (x86)\Google\Chrome\Application\chrome.exe --user-data-dir=/tmp/foo --ignore-certificate-errors --unsafely-treat-insecure-origin-as-secure=https://localhost`/
-
+### Зависимости pm2, dotenv, mocha, chai, superagent
+Для демонстрации backend приложения, и для flow разработчика. Для запуска приложений в фоне, управления логами, балансировкой. Тестирования приложения;
