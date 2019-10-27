@@ -1,61 +1,57 @@
 const assert = require("assert");
 const got = require("got");
-const tunnel = require("tunnel");
+const {
+  parseGotResponseFromCouchDB,
+  parseGotPutResponseFromCouchDB
+} = require("../lib");
 const url = "http://admin:admin@localhost:5984/_users/org.couchdb.user";
 const user = { name: "test", password: "123456", roles: [], type: "user" };
 const userUrl = () => `${url}:${user.name}`;
-let userRevision = "";
 
 /**
- * Берем весь трафик в Fiddler
+ * Берем весь трафик в Fiddler.
+ * На случай проблем разбить стекло и разкомментировать код
  */
-let proxy = tunnel.httpOverHttp({
-  proxy: {
-    host: "localhost",
-    port: 8888
-  }
-});
+// const tunnel = require("tunnel");
+// let proxy = tunnel.httpOverHttp({
+//   proxy: {
+//     host: "localhost",
+//     port: 8888
+//   }
+// });
 
 describe("users", function() {
   it("create new user", async function() {
-    let result;
+    let putResponse, parsedPutResponse;
     try {
-      result = await got.put(userUrl(), {
+      putResponse = await got.put(userUrl(), {
         json: true,
-        body: user,
-        agent: proxy
+        body: user
       });
+      parsedPutResponse = parseGotPutResponseFromCouchDB(putResponse);
     } catch (error) {
       assert.fail(error);
     }
-    assert.ok(result.statusMessage === "OK");
-  });
-
-  /**
-   * Получим версию документа для пользователя
-   */
-  it("get information about test user", async function() {
-    let result;
-    try {
-      result = await got.head(userUrl(), { agent: proxy });
-    } catch (error) {
-      assert.fail(error);
-    }
-    userRevision = result.headers["etag"];
-    assert.ok(result.statusMessage === "OK");
+    assert.ok(parsedPutResponse.ok);
   });
 
   it("delete test user", async function() {
-    let result;
+    let headResponse, parsedHeadResponse;
     try {
-      result = await got
-        .delete(userUrl(), {
-          agent: proxy,
-          headers: { "If-None-Match": userRevision }
-        })
+      headResponse = await got.head(userUrl());
+      parsedHeadResponse = parseGotResponseFromCouchDB(headResponse);
     } catch (error) {
       assert.fail(error);
     }
-    assert.ok(result.ok);
+    let deleteResponse, parsedDeleteResponse;
+    try {
+      deleteResponse = await got.delete(userUrl(), {
+        headers: { "If-Match": parsedHeadResponse.etag }
+      });
+      parsedDeleteResponse = parseGotResponseFromCouchDB(deleteResponse);
+    } catch (error) {
+      assert.fail(error);
+    }
+    assert.ok(parsedDeleteResponse.ok);
   });
 });

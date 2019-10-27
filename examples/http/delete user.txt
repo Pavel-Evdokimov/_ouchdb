@@ -1,0 +1,6 @@
+DELETE http://localhost:5984/_users/org.couchdb.user:test HTTP/1.1
+accept: application/json
+content-type: application/json
+If-Match: "9-155defed51b8741b162b7c29b6148eb2"
+Host: localhost:5984
+Authorization: Basic YWRtaW46YWRtaW4=
