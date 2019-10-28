@@ -23,7 +23,7 @@ const testUserUrl = `${usersUrl}:${user.name}`;
 //   }
 // });
 
-describe("users", function() {
+describe.skip("users", function() {
   it.skip("create new user", async function() {
     let putResponse, parsedPutResponse;
     try {

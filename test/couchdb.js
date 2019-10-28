@@ -12,7 +12,12 @@ const couchUrl = "http://admin:admin@localhost:5984";
 const usersUrl = `${couchUrl}/_users/org.couchdb.user`;
 const sessionUrl = `${couchUrl}/_session`;
 const securityUrl = `${couchUrl}/${DB_TEST}/_security`;
-const user = { name: "test", password: "123456", roles: [], type: "user" };
+const user = {
+  name: "allown@mail.ru",
+  password: "123456",
+  roles: [],
+  type: "user"
+};
 const testUserUrl = `${usersUrl}:${user.name}`;
 const securityObject = {
   admins: {
@@ -42,13 +47,14 @@ describe("couchdb is connected", function() {
    * @description Из-за этого бд больше не будет публичной
    */
   it("put security admin to test db", async function() {
-    let putResponse, parsedSecurity;
+    let parsedSecurity;
     try {
-      putResponse = await got.put(securityUrl, {
-        json: true,
-        body: securityObject
-      });
-      parsedSecurity = parseGotPutSecurity(putResponse);
+      parsedSecurity = await got
+        .put(securityUrl, {
+          json: true,
+          body: securityObject
+        })
+        .then(parseGotPutSecurity);
     } catch (error) {
       assert.fail(error);
     }
@@ -56,13 +62,14 @@ describe("couchdb is connected", function() {
   });
 
   it("create test user", async function() {
-    let putResponse, parsedPutResponse;
+    let parsedPutResponse;
     try {
-      putResponse = await got.put(testUserUrl, {
-        json: true,
-        body: user
-      });
-      parsedPutResponse = parseGotPutResponseFromCouchDB(putResponse);
+      parsedPutResponse = await got
+        .put(testUserUrl, {
+          json: true,
+          body: user
+        })
+        .then(parseGotPutResponseFromCouchDB);
     } catch (error) {
       assert.fail(error);
     }
@@ -73,7 +80,22 @@ describe("couchdb is connected", function() {
     let testDB = new PouchDB(`${couchUrl}/${DB_TEST}`, {
       auth: { username: "test", password: "123456" }
     });
-    await assert.rejects(testDB.get(DOCUMENT._id), "wtmessage?");
+    await assert.rejects(testDB.get(DOCUMENT._id));
+  });
+
+  it("give test user testRole group", async function() {
+    //Получить пользователя test, добавить ему роль, записать пользователя test
+    let getUserResponse;
+    try {
+      getUserResponse = await got
+        .get(`${usersUrl}:${user.name}`, {
+          json: true
+        })
+        .then(parseGotPutSecurity);
+    } catch (error) {
+      assert.fail(error);
+    }
+    assert.ok(getUserResponse.ok);
   });
 
   it("create document", async function() {
