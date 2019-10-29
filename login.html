@@ -1,0 +1,31 @@
+<form id="login">
+  <input type="text" name="name" /> <input type="password" name="password" />
+  <input id="submit" type="button" value="login" />
+</form>
+
+<script>
+  let form = document.getElementById("login");
+  let submit = document.getElementById("submit");
+  submit.addEventListener("click", async e => {
+    let data;
+    try {
+      data = await fetch("http://localhost:5984/_session", {
+        method: "POST",
+        credentials: "include", //this is for set-cookie AuthSession
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: form.name.value,
+          password: form.password.value
+        })
+      }).then(res => {
+        return res.json();
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(data);
+    window.location.assign("/");
+  });
+</script>
