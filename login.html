@@ -1,12 +1,12 @@
-<form id="login">
+<form id="credentials">
   <input type="text" name="name" /> <input type="password" name="password" />
-  <input id="submit" type="button" value="login" />
+  <input id="login" type="button" value="login" />
 </form>
 
 <script>
-  let form = document.getElementById("login");
-  let submit = document.getElementById("submit");
-  submit.addEventListener("click", async e => {
+  let credentials = document.getElementById("credentials");
+  let login = document.getElementById("login");
+  login.addEventListener("click", async e => {
     let data;
     try {
       data = await fetch("http://localhost:5984/_session", {
@@ -16,8 +16,8 @@
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          name: form.name.value,
-          password: form.password.value
+          name: credentials.name.value,
+          password: credentials.password.value
         })
       }).then(res => {
         return res.json();

@@ -8,7 +8,12 @@ const {
 const couchUrl = "http://admin:admin@localhost:5984";
 const usersUrl = `${couchUrl}/_users/org.couchdb.user`;
 const sessionUrl = `${couchUrl}/_session`;
-const user = { name: "test", password: "123456", roles: [], type: "user" };
+const user = {
+  name: "allown@mail.ru",
+  password: "123456",
+  roles: [],
+  type: "user"
+};
 const testUserUrl = `${usersUrl}:${user.name}`;
 
 /**
@@ -23,7 +28,7 @@ const testUserUrl = `${usersUrl}:${user.name}`;
 //   }
 // });
 
-describe.skip("users", function() {
+describe("users", function() {
   it.skip("create new user", async function() {
     let putResponse, parsedPutResponse;
     try {
