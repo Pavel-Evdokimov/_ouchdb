@@ -1,6 +1,7 @@
 <form id="credentials">
   <input type="text" name="name" /> <input type="password" name="password" />
   <input id="login" type="button" value="login" />
+  <input id="signin" type="button" value="signin" />
 </form>
 
 <script>
@@ -27,5 +28,30 @@
     }
     console.log(data);
     window.location.assign("/");
+  });
+  let signin = document.getElementById("signin");
+  signin.addEventListener("click", async e => {
+    let data;
+    try {
+      data = await fetch("http://localhost:3001/signin", {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          name: credentials.name.value,
+          password: credentials.password.value
+        })
+      })
+        .then(res => res.json())
+        .then(val => {
+          console.log(val);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(data);
+    login.click();
   });
 </script>

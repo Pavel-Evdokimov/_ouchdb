@@ -1,20 +1,23 @@
 const express = require("express");
 const path = require("path");
 const app = express();
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
+const { createUser } = require("./lib/signin");
 
 app.use(express.static("public"));
 
-app.get("/signup", (req, res) => {
-  res.json({ ok: true });
+app.post("/signin", (req, res) => {
+  createUser(req.body)
+    .then(user => {
+      res.status(user.statusCode).json(user.body);
+    })
+    .catch(err => {
+      res.status(err.statusCode).json(err.body);
+    });
 });
 
 app.get("/login", (req, res) => {
-  //   res.json({ ok: true });
-  // res.send(
-  //   `
-  //   <form action="http://localhost:5984/_session?next=http://localhost:3001/" method="post"> <input type="text" name="name"/> <input type="password" name="password"/> <input type="hidden" name="next" value="http://localhost:3001/"> <button type="submit">login</button></html>
-  //   `
-  // );
   res.sendFile(path.join(__dirname, "login.html"));
 });
 

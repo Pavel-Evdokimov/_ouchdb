@@ -16,6 +16,8 @@ const user = {
 };
 const testUserUrl = `${usersUrl}:${user.name}`;
 
+const { createUser } = require("../lib/signin");
+
 /**
  * Берем весь трафик в Fiddler.
  * На случай проблем разбить стекло и разкомментировать код
@@ -41,6 +43,16 @@ describe("users", function() {
       assert.fail(error);
     }
     assert.ok(parsedPutResponse.ok);
+  });
+
+  it("create new user 2", async function() {
+    let result = await createUser({
+      name: "test2",
+      password: "123",
+      roles: [],
+      type: "user"
+    });
+    assert.ok(result.statusCode === 201);
   });
 
   it("authenticate user test", async function() {
