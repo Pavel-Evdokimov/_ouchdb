@@ -7,14 +7,13 @@ const { createUser } = require("./lib/signin");
 
 app.use(express.static("public"));
 
-app.post("/signin", (req, res) => {
-  createUser(req.body)
-    .then(user => {
-      res.status(user.statusCode).json(user.body);
-    })
-    .catch(err => {
-      res.status(err.statusCode).json(err.body);
-    });
+app.post("/signin", async (req, res) => {
+  try {
+    let user = await createUser(req.body);
+    res.status(user.statusCode).json(user.body);
+  } catch (error) {
+    res.status(500).send("we are bad at code sorry ...");
+  }
 });
 
 app.get("/login", (req, res) => {
