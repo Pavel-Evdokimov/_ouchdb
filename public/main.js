@@ -20,5 +20,9 @@
       }
     });
     console.log("current name", currentUser.userCtx.name);
+    setTimeout(() => {
+      // error
+      const a = b * b;
+    }, 1000);
   }
 })();
