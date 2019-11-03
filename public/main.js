@@ -12,8 +12,18 @@
     const addForm = document.getElementById("addForm");
     const addButton = document.getElementById("addButton");
     addButton.addEventListener("click", async e => {
+      const photo = addForm.photo.files[0];
       try {
-        let result = await db.put({ _id: addForm.text.value, text: "hello" });
+        let result = await db.put({
+          _id: addForm.text.value,
+          text: "hello",
+          _attachments: {
+            [photo.name]: {
+              content_type: photo.type,
+              data: photo
+            }
+          }
+        });
         console.log(result);
       } catch (error) {
         console.log(error);
