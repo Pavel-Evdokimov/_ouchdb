@@ -24,17 +24,20 @@
         Description
       </p>
       <!-- <button id="notifications">Request dummy notifications</button> -->
-      <form id="addForm" action="">
-        <textarea
-          name="text"
-          id="text"
-          cols="30"
-          rows="10"
-          placeholder="введите текст"
-        ></textarea>
-        <input type="file" name="photo" id="photo" />
-        <input id="addButton" type="button" value="Добавить" />
-      </form>
+      <article>
+        <form id="addForm" action="">
+          <input type="text" name="title" />
+          <textarea
+            name="text"
+            id="text"
+            cols="10"
+            rows="2"
+            placeholder="введите текст"
+          ></textarea>
+          <input type="file" name="photo" id="photo" />
+          <input id="addButton" type="button" value="Добавить" />
+        </form>
+      </article>
       <section id="content"></section>
     </main>
     <footer>
