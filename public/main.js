@@ -1,4 +1,11 @@
 (async () => {
+  let currentUser = await fetch("http://localhost:5984/_session", {
+    credentials: "include"
+  }).then(res => res.json());
+  if (!currentUser.userCtx.name) {
+    window.location.assign("/login");
+  }
+
   const db = new PouchDB("http://localhost:5984/test");
 
   const addContent = async docId => {
@@ -20,12 +27,6 @@
   };
   //get current rout
   if (window.location.pathname === "/") {
-    let currentUser = await fetch("http://localhost:5984/_session", {
-      credentials: "include"
-    }).then(res => res.json());
-    if (!currentUser.userCtx.name) {
-      window.location.assign("/login");
-    }
     document.getElementById("userName").innerText = currentUser.userCtx.name;
     const addForm = document.getElementById("addForm");
     const addButton = document.getElementById("addButton");
