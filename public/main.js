@@ -11,16 +11,64 @@
   //   navigator.serviceWorker.register("sw.js");
   // }
   // const db = new PouchDB("http://localhost:5984/test");
+
   const db = new PouchDB("test");
-  let docs = await db.allDocs({
-    include_docs: true,
-    attachments: true,
-    binary: true,
-    limit: 5
-  });
+  let limit = 5;
+  let skip = 0;
+
+  const getData = async (offset, limit) => {
+    //allDocs with offset
+    return await db.allDocs({
+      include_docs: true,
+      skip: offset,
+      attachments: true,
+      binary: true,
+      limit: limit
+    });
+  };
+
+  //TODO: fix global state. Implement pure function instead
+  const nextPage = async e => {
+    let docs = await getData(skip + limit, limit);
+    renderRows(docs.rows);
+    calculatePagination(docs, limit);
+    skip = docs.offset;
+    return docs;
+  };
+
+  const previousPage = async e => {
+    let docs = await getData(skip - limit, limit);
+    renderRows(docs.rows);
+    calculatePagination(docs, limit);
+    skip = docs.offset;
+    return docs;
+  };
+
+  const getPageNumber = (docs, limit) => {
+    return Math.ceil(docs.offset / limit) + 1;
+  };
+
+  const getPageCount = (docs, limit) => {
+    return Math.ceil(docs.total_rows / limit) + 1;
+  };
+
+  const calculatePagination = (docs, limit) => {
+    document
+      .getElementById("rowCount")
+      .querySelector("[name='value']").innerText = limit;
+
+    document
+      .getElementById("pageCount")
+      .querySelector("[name='value']").innerText = getPageCount(docs, limit);
+
+    document
+      .getElementById("pageNumber")
+      .querySelector("[name='value']").innerText = getPageNumber(docs, limit);
+  };
 
   const renderRows = rows => {
     let content = document.getElementById("content");
+    content.innerHTML = "";
     return rows.map(value => {
       let { _id, _attachments, ...doc } = value.doc;
       if (!_attachments) {
@@ -49,7 +97,7 @@
     }
   };
 
-  let articles = renderRows(docs.rows);
+  // let articles = renderRows(docs.rows);
 
   const addContent = async docId => {
     let content = document.getElementById("content");
@@ -71,10 +119,7 @@
     article.querySelector("img").src = url;
     content.appendChild(article);
   };
-  const showList = async () => {
-    let content = document.getElementById("content");
-    //Get allDocuments
-  };
+
   //Sync
   const sync = e => {
     // db.replicate.from("http://localhost:5984/test", { filter: "app/user" });
@@ -83,7 +128,7 @@
       live: true,
       retry: true
     });
-    syncEvents
+    return syncEvents
       .on("change", info => {
         console.log(info);
         if (info.change.ok) {
@@ -108,6 +153,7 @@
         console.log(err);
       });
   };
+
   const addNewArticle = async e => {
     const addForm = document.getElementById("addForm");
     const photo = addForm.photo.files[0];
@@ -130,21 +176,32 @@
       console.log(error);
     }
   };
+
   const generateError = () => {
     setTimeout(() => {
       // error
       const a = b * b;
     }, 1000);
   };
+
   //get current rout
   if (window.location.pathname === "/") {
     document.getElementById("userName").innerText = currentUser.userCtx.name;
     const addButton = document.getElementById("addButton");
     const syncButton = document.getElementById("syncButton");
-    syncButton.addEventListener("click", sync);
+    const nextPageButton = document.getElementById("next");
+    const previousPageButton = document.getElementById("prev");
+    // syncButton.addEventListener("click", sync);
     addButton.addEventListener("click", addNewArticle);
-    // Получить все записи пользователя и отрисовать их
-    console.log("current name", currentUser);
+    nextPageButton.addEventListener("click", nextPage);
+    previousPageButton.addEventListener("click", previousPage);
+
+    //TODO: initial render
+    let docs = await getData(skip, limit);
+    renderRows(docs.rows);
+    calculatePagination(docs, limit);
+
+    let events = sync();
     generateError();
   }
 })();
