@@ -16,7 +16,7 @@
     include_docs: true,
     attachments: true,
     binary: true,
-    limit: 2
+    limit: 5
   });
 
   const renderRows = rows => {
@@ -36,6 +36,16 @@
       article.querySelector("img").src = url;
       content.appendChild(article);
     });
+  };
+  const rerenderArticle = doc => {
+    let imageName = Object.getOwnPropertyNames(doc._attachments)[0];
+    let article = document.getElementById(doc._id);
+    if (article && imageName) {
+      let url = URL.createObjectURL(doc._attachments[imageName].data);
+      article.querySelector("h3").innerText = doc.title;
+      article.querySelector("p").innerText = doc.text;
+      article.querySelector("img").src = url;
+    }
   };
 
   let articles = renderRows(docs.rows);
@@ -68,11 +78,18 @@
   const sync = e => {
     // db.replicate.from("http://localhost:5984/test", { filter: "app/user" });
     let syncEvents = PouchDB.sync("test", "http://localhost:5984/test", {
-      pull: { filter: "app/user" }
+      pull: { filter: "app/user" },
+      live: true,
+      retry: true
     });
     syncEvents
       .on("change", info => {
         console.log(info);
+        if (info.change.ok) {
+          info.change.docs.forEach(doc => {
+            rerenderArticle(doc);
+          });
+        }
       })
       .on("paused", err => {
         console.log(err);
@@ -97,6 +114,7 @@
       let result = await db.post({
         title: addForm.title.value,
         text: addForm.text.value,
+        shareWith: addForm.shareWith.value,
         userName: currentUser.userCtx.name,
         _attachments: {
           [photo.name]: {

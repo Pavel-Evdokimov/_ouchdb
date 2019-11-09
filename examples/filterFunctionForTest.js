@@ -9,10 +9,13 @@ const db = new PouchDB(`${url}test`, {
 
 const filterDoc = {
   _id: "_design/app",
-  _rev: "1-76e66df8371fbcda0b13d7aa405b3207",
+  _rev: "3-3bcfec463f785ccf8930d5addd17c307",
   filters: {
     user: function(doc, req) {
-      if (doc.userName != req.userCtx.name) {
+      if (
+        doc.userName != req.userCtx.name &&
+        doc.shareWith != req.userCtx.name
+      ) {
         return false;
       }
       return true;
