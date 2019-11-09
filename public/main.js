@@ -90,38 +90,42 @@
         console.log(err);
       });
   };
-  //get current rout
-  if (window.location.pathname === "/") {
-    document.getElementById("userName").innerText = currentUser.userCtx.name;
+  const addNewArticle = async e => {
     const addForm = document.getElementById("addForm");
-    const addButton = document.getElementById("addButton");
-    const syncButton = document.getElementById("syncButton");
-    syncButton.addEventListener("click", sync);
-    addButton.addEventListener("click", async e => {
-      const photo = addForm.photo.files[0];
-      try {
-        let result = await db.post({
-          title: addForm.title.value,
-          text: addForm.text.value,
-          userName: currentUser.userCtx.name,
-          _attachments: {
-            [photo.name]: {
-              content_type: photo.type,
-              data: photo
-            }
+    const photo = addForm.photo.files[0];
+    try {
+      let result = await db.post({
+        title: addForm.title.value,
+        text: addForm.text.value,
+        userName: currentUser.userCtx.name,
+        _attachments: {
+          [photo.name]: {
+            content_type: photo.type,
+            data: photo
           }
-        });
-        addContent(result.id);
-        console.log(result);
-      } catch (error) {
-        console.log(error);
-      }
-    });
-    // Получить все записи пользователя и отрисовать их
-    console.log("current name", currentUser);
+        }
+      });
+      addContent(result.id);
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const generateError = () => {
     setTimeout(() => {
       // error
       const a = b * b;
     }, 1000);
+  };
+  //get current rout
+  if (window.location.pathname === "/") {
+    document.getElementById("userName").innerText = currentUser.userCtx.name;
+    const addButton = document.getElementById("addButton");
+    const syncButton = document.getElementById("syncButton");
+    syncButton.addEventListener("click", sync);
+    addButton.addEventListener("click", addNewArticle);
+    // Получить все записи пользователя и отрисовать их
+    console.log("current name", currentUser);
+    generateError();
   }
 })();
