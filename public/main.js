@@ -23,6 +23,9 @@
     let content = document.getElementById("content");
     return rows.map(value => {
       let { _id, _attachments, ...doc } = value.doc;
+      if (!_attachments) {
+        return;
+      }
       let imageName = Object.getOwnPropertyNames(_attachments)[0];
       let article = document.createElement("article");
       article.setAttribute("id", _id);
@@ -61,11 +64,39 @@
     let content = document.getElementById("content");
     //Get allDocuments
   };
+  //Sync
+  const sync = e => {
+    // db.replicate.from("http://localhost:5984/test", { filter: "app/user" });
+    let syncEvents = PouchDB.sync("test", "http://localhost:5984/test", {
+      pull: { filter: "app/user" }
+    });
+    syncEvents
+      .on("change", info => {
+        console.log(info);
+      })
+      .on("paused", err => {
+        console.log(err);
+      })
+      .on("active", () => {
+        console.log("active");
+      })
+      .on("denied", err => {
+        console.log(err);
+      })
+      .on("complete", info => {
+        console.log(info);
+      })
+      .on("error", err => {
+        console.log(err);
+      });
+  };
   //get current rout
   if (window.location.pathname === "/") {
     document.getElementById("userName").innerText = currentUser.userCtx.name;
     const addForm = document.getElementById("addForm");
     const addButton = document.getElementById("addButton");
+    const syncButton = document.getElementById("syncButton");
+    syncButton.addEventListener("click", sync);
     addButton.addEventListener("click", async e => {
       const photo = addForm.photo.files[0];
       try {

@@ -9,16 +9,18 @@ const db = new PouchDB(`${url}test`, {
 
 const filterDoc = {
   _id: "_design/app",
+  _rev: "1-76e66df8371fbcda0b13d7aa405b3207",
   filters: {
     user: function(doc, req) {
-      var body = JSON.parse(req.body);
-      body["test"] = "this is test";
-      return [body, "ok"];
+      if (doc.userName != req.userCtx.name) {
+        return false;
+      }
+      return true;
     }.toString()
   }
 };
 
-db.put(designDoc)
+db.put(filterDoc)
   .then(val => {
     console.log(val);
   })
