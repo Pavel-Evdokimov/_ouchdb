@@ -7,10 +7,9 @@
   }
 
   // Registering Service Worker
-  // if ("serviceWorker" in navigator) {
-  //   navigator.serviceWorker.register("sw.js");
-  // }
-  // const db = new PouchDB("http://localhost:5984/test");
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js");
+  }
 
   const db = new PouchDB("test");
   let limit = 5;
@@ -144,7 +143,7 @@
         }
       })
       .on("paused", err => {
-        console.log(err);
+        console.log("paused", err);
       })
       .on("active", () => {
         console.log("active");
@@ -156,7 +155,7 @@
         console.log(info);
       })
       .on("error", err => {
-        console.log(err);
+        console.log("error", err);
       });
   };
 
@@ -198,16 +197,23 @@
     calculatePagination(docs, limit);
   };
 
+  const updateOnlineStatus = e => {
+    const condition = navigator.onLine ? "online" : "offline";
+    const online = document.getElementById("online");
+    online.innerText = condition;
+  };
+
   //get current rout
   if (window.location.pathname === "/") {
     document.getElementById("userName").innerText = currentUser.userCtx.name;
     const addButton = document.getElementById("addButton");
-    const syncButton = document.getElementById("syncButton");
     const nextPageButton = document.getElementById("next");
     const previousPageButton = document.getElementById("prev");
     addButton.addEventListener("click", addNewArticle);
     nextPageButton.addEventListener("click", nextPage);
     previousPageButton.addEventListener("click", previousPage);
+    window.addEventListener("online", updateOnlineStatus);
+    window.addEventListener("offline", updateOnlineStatus);
 
     rerenderCurrentPage();
 

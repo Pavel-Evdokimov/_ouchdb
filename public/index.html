@@ -7,17 +7,16 @@
     <link rel="stylesheet" href="style.css" />
     <link rel="manifest" href="pwa.webmanifest" />
     <script src="beacon.js"></script>
-    <script src="data/games.js" defer></script>
     <script src="pouchdb-7.1.1.min.js"></script>
-    <!-- <script src="pouchdb.find.min.js"></script> -->
-    <!-- <script src="app.js" defer></script> -->
     <script src="main.js"></script>
+    <!-- <script src="sw.js"></script> -->
   </head>
   <body>
     <header>
       <p>
         <a class="logo" href=""><img src="img/aslogo.png" alt="alfastrah"/></a>
       </p>
+      <p id="online">online</p>
     </header>
     <main>
       <h1 id="userName"></h1>
@@ -45,7 +44,6 @@
           <input type="text" name="shareWithGroup" />
           <input id="addButton" type="button" value="Добавить" />
         </form>
-        <!-- <input type="button" value="Sync" id="syncButton" /> -->
       </article>
       <section id="content"></section>
       <span id="rowCount">
