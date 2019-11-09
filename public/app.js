@@ -1,5 +1,3 @@
-console.log("authorize");
-window.location.assign("/login");
 // Generating content based on the template
 var template =
   "<article>\n\

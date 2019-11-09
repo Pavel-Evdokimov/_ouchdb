@@ -6,7 +6,36 @@
     window.location.assign("/login");
   }
 
-  const db = new PouchDB("http://localhost:5984/test");
+  // Registering Service Worker
+  // if ("serviceWorker" in navigator) {
+  //   navigator.serviceWorker.register("sw.js");
+  // }
+  // const db = new PouchDB("http://localhost:5984/test");
+  const db = new PouchDB("test");
+  let docs = await db.allDocs({
+    include_docs: true,
+    attachments: true,
+    binary: true,
+    limit: 2
+  });
+
+  const renderRows = rows => {
+    let content = document.getElementById("content");
+    return rows.map(value => {
+      let { _id, _attachments, ...doc } = value.doc;
+      let imageName = Object.getOwnPropertyNames(_attachments)[0];
+      let article = document.createElement("article");
+      article.setAttribute("id", _id);
+      let template = `<img><h3>${doc.title}</h3><p>${doc.text}</p>`;
+      article.innerHTML = template;
+      let blob = _attachments[imageName].data;
+      let url = URL.createObjectURL(blob);
+      article.querySelector("img").src = url;
+      content.appendChild(article);
+    });
+  };
+
+  let articles = renderRows(docs.rows);
 
   const addContent = async docId => {
     let content = document.getElementById("content");
@@ -18,12 +47,19 @@
     article.setAttribute("id", _id);
 
     let template = `
-    <img src="http://localhost:5984/test/${_id}/${imageName}">
+    <img>
     <h3>${doc.title}</h3>
     <p>${doc.text}</p>
     `;
     article.innerHTML = template;
+    let blob = await db.getAttachment(_id, imageName);
+    let url = URL.createObjectURL(blob);
+    article.querySelector("img").src = url;
     content.appendChild(article);
+  };
+  const showList = async () => {
+    let content = document.getElementById("content");
+    //Get allDocuments
   };
   //get current rout
   if (window.location.pathname === "/") {
