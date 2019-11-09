@@ -94,6 +94,9 @@
       article.querySelector("h3").innerText = doc.title;
       article.querySelector("p").innerText = doc.text;
       article.querySelector("img").src = url;
+      return true;
+    } else {
+      return false;
     }
   };
 
@@ -133,7 +136,10 @@
         console.log(info);
         if (info.change.ok) {
           info.change.docs.forEach(doc => {
-            rerenderArticle(doc);
+            let r = rerenderArticle(doc);
+            if (!r) {
+              rerenderCurrentPage();
+            }
           });
         }
       })
@@ -162,6 +168,7 @@
         title: addForm.title.value,
         text: addForm.text.value,
         shareWith: addForm.shareWith.value,
+        shareWithGroup: addForm.shareWithGroup.value,
         userName: currentUser.userCtx.name,
         _attachments: {
           [photo.name]: {
@@ -184,6 +191,13 @@
     }, 1000);
   };
 
+  const rerenderCurrentPage = async () => {
+    //TODO: initial render
+    let docs = await getData(skip, limit);
+    renderRows(docs.rows);
+    calculatePagination(docs, limit);
+  };
+
   //get current rout
   if (window.location.pathname === "/") {
     document.getElementById("userName").innerText = currentUser.userCtx.name;
@@ -191,15 +205,11 @@
     const syncButton = document.getElementById("syncButton");
     const nextPageButton = document.getElementById("next");
     const previousPageButton = document.getElementById("prev");
-    // syncButton.addEventListener("click", sync);
     addButton.addEventListener("click", addNewArticle);
     nextPageButton.addEventListener("click", nextPage);
     previousPageButton.addEventListener("click", previousPage);
 
-    //TODO: initial render
-    let docs = await getData(skip, limit);
-    renderRows(docs.rows);
-    calculatePagination(docs, limit);
+    rerenderCurrentPage();
 
     let events = sync();
     generateError();

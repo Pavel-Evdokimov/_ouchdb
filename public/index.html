@@ -27,7 +27,9 @@
       <!-- <button id="notifications">Request dummy notifications</button> -->
       <article>
         <form id="addForm" action="">
+          <label for="title">Title</label>
           <input type="text" name="title" />
+          <label for="text">Text</label>
           <textarea
             name="text"
             id="text"
@@ -35,11 +37,15 @@
             rows="2"
             placeholder="введите текст"
           ></textarea>
+          <label for="photo">Photo</label>
           <input type="file" name="photo" id="photo" />
+          <label for="shareWith">email</label>
           <input type="text" name="shareWith" />
+          <label for="shareWithGroup">#group</label>
+          <input type="text" name="shareWithGroup" />
           <input id="addButton" type="button" value="Добавить" />
         </form>
-        <input type="button" value="Sync" id="syncButton" />
+        <!-- <input type="button" value="Sync" id="syncButton" /> -->
       </article>
       <section id="content"></section>
       <span id="rowCount">
