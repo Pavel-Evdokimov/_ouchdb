@@ -37,6 +37,7 @@
       content.appendChild(article);
     });
   };
+
   const rerenderArticle = doc => {
     let imageName = Object.getOwnPropertyNames(doc._attachments)[0];
     let article = document.getElementById(doc._id);
