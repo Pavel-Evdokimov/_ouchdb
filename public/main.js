@@ -1,5 +1,5 @@
 (async () => {
-  let currentUser = await fetch("http://localhost:5984/_session", {
+  let currentUser = await fetch("https://couchdb.ml/api/_session", {
     credentials: "include"
   }).then(res => res.json());
   if (!currentUser.userCtx.name) {
@@ -125,7 +125,7 @@
   //Sync
   const sync = e => {
     // db.replicate.from("http://localhost:5984/test", { filter: "app/user" });
-    let syncEvents = PouchDB.sync("test", "http://localhost:5984/test", {
+    let syncEvents = PouchDB.sync("test", "https://couchdb.ml/api/test", {
       pull: { filter: "app/user" },
       live: true,
       retry: true

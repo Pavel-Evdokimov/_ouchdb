@@ -2,7 +2,7 @@ const PouchDB = require("pouchdb-core");
 PouchDB.plugin(require("pouchdb-adapter-http"));
 PouchDB.plugin(require("pouchdb-mapreduce"));
 
-const url = "http://localhost:5984/";
+const url = "https://couchdb.ml/";
 const db = new PouchDB(`${url}`, {
   auth: { username: "allown@mail.ru", password: "123456" }
 });

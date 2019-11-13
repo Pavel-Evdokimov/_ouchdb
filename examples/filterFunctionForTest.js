@@ -2,14 +2,13 @@ const PouchDB = require("pouchdb-core");
 PouchDB.plugin(require("pouchdb-adapter-http"));
 PouchDB.plugin(require("pouchdb-mapreduce"));
 
-const url = "http://localhost:5984/";
+const url = "https://couchdb.ml/api/";
 const db = new PouchDB(`${url}test`, {
   auth: { username: "admin", password: "admin" }
 });
 
 const filterDoc = {
   _id: "_design/app",
-  _rev: "9-36cd3068d19f5ea9a48c509674c4558f",
   filters: {
     user: function(doc, req) {
       // If current user is author or recepient or in group of recepients

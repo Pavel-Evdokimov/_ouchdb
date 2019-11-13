@@ -10,7 +10,7 @@
   login.addEventListener("click", async e => {
     let data;
     try {
-      data = await fetch("http://localhost:5984/_session", {
+      data = await fetch("https://couchdb.ml/api/_session", {
         method: "POST",
         credentials: "include", //this is for set-cookie AuthSession
         headers: {
@@ -33,7 +33,7 @@
   signin.addEventListener("click", async e => {
     let data;
     try {
-      data = await fetch("http://localhost:3001/signin", {
+      data = await fetch("https://couchdb.ml/signin", {
         method: "POST",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify({
