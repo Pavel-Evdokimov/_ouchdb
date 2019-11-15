@@ -9,10 +9,12 @@ const db = new PouchDB(`${url}beacons`, {
 
 const designDoc = {
   _id: "_design/app",
+  _rev: "1-b91a56260cae84b5a6aba390ad1cba44",
   updates: {
-    beacon: function(doc, req) {
+    beacon: function (doc, req) {
       var body = JSON.parse(req.body);
       body["_id"] = req.uuid;
+      body["user"] = req.userCtx;
       return [body, "ok"];
     }.toString()
   }
